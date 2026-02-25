@@ -7,6 +7,8 @@ public class MultiClass
         "net8.0";
 #elif NET9_0
         "net9.0";
+#elif NET10_0
+        "net10.0";
 #else
         "unknown";
 #endif
