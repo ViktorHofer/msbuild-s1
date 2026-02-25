@@ -27,7 +27,7 @@
 #     - shared/binlog-mcp.md
 #     - shared/compiled/performance.lock.md
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"42539413a97af588ba9f6bd851fc5aa44d2eced467e5f5779b0e9ae9bc528dc1","compiler_version":"v0.50.1"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"2f6206fa772139e13a6723cabb01596373f713780bf693bd0053e350ecbd5216","compiler_version":"v0.50.1"}
 
 name: "Weekly Build Performance Audit"
 "on":
@@ -700,6 +700,10 @@ jobs:
               "binlog-mcp": {
                 "type": "stdio",
                 "container": "ghcr.io/viktorhofer/binlog-mcp:0.0.13",
+                "args": [
+                  "-v",
+                  "${{ github.workspace }}:${{ github.workspace }}"
+                ],
                 "tools": [
                   "*"
                 ]

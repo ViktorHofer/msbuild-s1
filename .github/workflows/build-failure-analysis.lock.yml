@@ -27,7 +27,7 @@
 #     - shared/binlog-mcp.md
 #     - shared/compiled/build-errors.lock.md
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"6114bf7fd1112222f1d75f35df3995c0d81ed1d143288472de08290ad207291b","compiler_version":"v0.50.1"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"f85fc38ca4b43f7abfd30eff9bcf8a5824593ce1385ddf6a3536326fb80e000c","compiler_version":"v0.50.1"}
 
 name: "MSBuild Build Failure Analyzer"
 "on":
@@ -659,6 +659,10 @@ jobs:
               "binlog-mcp": {
                 "type": "stdio",
                 "container": "ghcr.io/viktorhofer/binlog-mcp:0.0.13",
+                "args": [
+                  "-v",
+                  "${{ github.workspace }}:${{ github.workspace }}"
+                ],
                 "tools": [
                   "*"
                 ]

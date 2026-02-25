@@ -2,6 +2,7 @@
 mcp-servers:
   binlog-mcp:
     container: "ghcr.io/viktorhofer/binlog-mcp:0.0.13"
+    args: ["-v", "${{ github.workspace }}:${{ github.workspace }}"]
     allowed: ["*"]
 tools:
   bash: ["dotnet", "cat", "grep", "head", "tail", "find", "ls"]
