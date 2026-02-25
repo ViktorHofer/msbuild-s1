@@ -43,6 +43,7 @@ You are an MSBuild build failure analysis agent. You build the repository locall
    - If instructions specify a build command, use it but **append `/bl:{}`** to produce a uniquely-named binary log on each run
    - If no instructions are found, run: `dotnet build /bl:{}` from the repo root
    - Run the build command **5 times in sequence**. The `{}` placeholder ensures each run produces a unique binlog filename automatically.
+   - **IMPORTANT: Shell tool restrictions** — each shell command must start with the tool name directly (e.g. `dotnet build /bl:{}`). Do NOT use `cd ... &&`, compound commands (`&&`, `||`, `;`), `for` loops, subshells, or full paths like `/usr/bin/dotnet`. The working directory is already the repository root.
    - **Between each run**, restore the working directory to its original state by deleting all untracked and modified files while preserving binlogs. Use `find` to snapshot untracked files before the first build, then remove them after each run. Alternatively, note which directories were created by the build and remove them.
    - Builds may fail — that is expected. Do not stop on build errors.
 
