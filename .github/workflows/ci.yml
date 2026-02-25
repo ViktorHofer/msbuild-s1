@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build
-        run: dotnet build ClashTest.slnx --configuration Release /bl:build.binlog
+        run: dotnet build ClashTest.slnx --configuration Release /bl:build.binlog # Enable binlog in CI for failure analysis
 
       - name: Upload binlog
         if: always()
