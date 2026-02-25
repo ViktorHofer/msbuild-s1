@@ -27,7 +27,7 @@
 #     - shared/binlog-mcp.md
 #     - shared/compiled/build-errors.lock.md
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"6febb04e6ee7df764790951e24885976fb6b38326d3fd0711bc973e6f6affd04","compiler_version":"v0.50.1"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"77136194003e188019f51bb1ffd4d6d8b8563dfef2e2b05df2ebbbba090244c2","compiler_version":"v0.50.1"}
 
 name: "MSBuild Build Failure Analyzer"
 "on":
@@ -57,6 +57,7 @@ name: "MSBuild Build Failure Analyzer"
     types:
     - created
     - edited
+  workflow_dispatch: null
 
 permissions: {}
 
@@ -69,7 +70,9 @@ jobs:
   activation:
     needs: pre_activation
     if: >
-      (needs.pre_activation.outputs.activated == 'true') && ((github.event_name == 'issues') && ((startsWith(github.event.issue.body, '/analyze-build-failure ')) ||
+      (needs.pre_activation.outputs.activated == 'true') && (((github.event_name == 'issues' || github.event_name == 'issue_comment' ||
+      github.event_name == 'pull_request' || github.event_name == 'pull_request_review_comment' || github.event_name == 'discussion' ||
+      github.event_name == 'discussion_comment') && ((github.event_name == 'issues') && ((startsWith(github.event.issue.body, '/analyze-build-failure ')) ||
       (github.event.issue.body == '/analyze-build-failure')) || (github.event_name == 'issue_comment') && (((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
       (github.event.comment.body == '/analyze-build-failure')) && (github.event.issue.pull_request == null)) ||
       (github.event_name == 'issue_comment') && (((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
@@ -79,7 +82,9 @@ jobs:
       (github.event.pull_request.body == '/analyze-build-failure')) || (github.event_name == 'discussion') &&
       ((startsWith(github.event.discussion.body, '/analyze-build-failure ')) || (github.event.discussion.body == '/analyze-build-failure')) ||
       (github.event_name == 'discussion_comment') && ((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
-      (github.event.comment.body == '/analyze-build-failure')))
+      (github.event.comment.body == '/analyze-build-failure')))) || (!(github.event_name == 'issues' || github.event_name == 'issue_comment' ||
+      github.event_name == 'pull_request' || github.event_name == 'pull_request_review_comment' || github.event_name == 'discussion' ||
+      github.event_name == 'discussion_comment')))
     runs-on: ubuntu-slim
     permissions:
       contents: read
@@ -1084,7 +1089,9 @@ jobs:
 
   pre_activation:
     if: >
-      (github.event_name == 'issues') && ((startsWith(github.event.issue.body, '/analyze-build-failure ')) ||
+      ((github.event_name == 'issues' || github.event_name == 'issue_comment' || github.event_name == 'pull_request' ||
+      github.event_name == 'pull_request_review_comment' || github.event_name == 'discussion' || github.event_name == 'discussion_comment') &&
+      ((github.event_name == 'issues') && ((startsWith(github.event.issue.body, '/analyze-build-failure ')) ||
       (github.event.issue.body == '/analyze-build-failure')) || (github.event_name == 'issue_comment') && (((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
       (github.event.comment.body == '/analyze-build-failure')) && (github.event.issue.pull_request == null)) ||
       (github.event_name == 'issue_comment') && (((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
@@ -1094,7 +1101,9 @@ jobs:
       (github.event.pull_request.body == '/analyze-build-failure')) || (github.event_name == 'discussion') &&
       ((startsWith(github.event.discussion.body, '/analyze-build-failure ')) || (github.event.discussion.body == '/analyze-build-failure')) ||
       (github.event_name == 'discussion_comment') && ((startsWith(github.event.comment.body, '/analyze-build-failure ')) ||
-      (github.event.comment.body == '/analyze-build-failure'))
+      (github.event.comment.body == '/analyze-build-failure')))) || (!(github.event_name == 'issues' || github.event_name == 'issue_comment' ||
+      github.event_name == 'pull_request' || github.event_name == 'pull_request_review_comment' || github.event_name == 'discussion' ||
+      github.event_name == 'discussion_comment'))
     runs-on: ubuntu-slim
     permissions:
       discussions: write
