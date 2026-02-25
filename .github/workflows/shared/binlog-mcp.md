@@ -4,7 +4,7 @@ mcp-servers:
     container: "ghcr.io/viktorhofer/binlog-mcp:0.0.13"
     allowed: ["*"]
 tools:
-  bash: ["dotnet", "cat", "grep", "head", "tail", "find", "ls", "curl", "unzip"]
+  bash: ["dotnet", "cat", "grep", "head", "tail", "find", "ls"]
 ---
 
 <!-- Shared: MSBuild Binary Log MCP Server -->
