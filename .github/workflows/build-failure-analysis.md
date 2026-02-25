@@ -21,6 +21,15 @@ tools:
 safe-outputs:
   add-comment:
     max: 3
+
+network:
+  allowed:
+    - defaults
+    - dotnet
+
+runtimes:
+  dotnet:
+    version: "10.0"
 ---
 
 # MSBuild Build Failure Analyzer
