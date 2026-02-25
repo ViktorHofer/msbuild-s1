@@ -19,4 +19,13 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build
-        run: dotnet build ClashTest.slnx --configuration Release
+        run: dotnet build ClashTest.slnx --configuration Release /bl:build.binlog
+        continue-on-error: true
+
+      - name: Upload binlog
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: binlog
+          path: build.binlog
+          retention-days: 7
