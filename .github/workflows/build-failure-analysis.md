@@ -1,6 +1,7 @@
 ---
 on:
   slash_command: analyze-build-failure
+  workflow_dispatch:
 
 permissions:
   contents: read
