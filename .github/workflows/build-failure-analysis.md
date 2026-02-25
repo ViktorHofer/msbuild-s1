@@ -28,22 +28,25 @@ You are an MSBuild build failure analysis agent. You build the repository locall
 
 ## Workflow
 
-1. **Build the repository with a binlog**:
+1. **Build the repository 5 times with binlogs** to catch both deterministic and non-deterministic failures (e.g., bin/obj clashes that only manifest under parallel builds):
    - Check for build instructions in `AGENTS.md`, `.github/copilot-instructions.md`, or `README.md` in the repo root
-   - If instructions specify a build command, use it but **append `/bl:build.binlog`** to produce a binary log
-   - If no instructions are found, run: `dotnet build /bl:build.binlog` from the repo root
-   - The build may fail — that is expected. Do not stop on build errors.
+   - If instructions specify a build command, use it but **append `/bl:{}`** to produce a uniquely-named binary log on each run
+   - If no instructions are found, run: `dotnet build /bl:{}` from the repo root
+   - Run the build command **5 times in sequence**. The `{}` placeholder ensures each run produces a unique binlog filename automatically.
+   - **Between each run**, restore the working directory to its original state by deleting all untracked and modified files while preserving binlogs. Use `find` to snapshot untracked files before the first build, then remove them after each run. Alternatively, note which directories were created by the build and remove them.
+   - Builds may fail — that is expected. Do not stop on build errors.
 
-2. **Analyze the binlog**:
-   - Load it with `load_binlog` using the absolute path to `build.binlog`
-   - Use `get_diagnostics` to extract errors and warnings
+2. **Analyze all binlogs**:
+   - List `*.binlog` files to find all generated logs
+   - Load each with `load_binlog` and use `get_diagnostics` to extract errors and warnings
+   - Compare results across runs — errors that appear in some runs but not others indicate non-deterministic issues (race conditions, file access conflicts)
    - Use `search_binlog` for specific patterns (see query language in imported knowledge)
    - Check for common failure categories:
      - **Compile errors** (CS prefix): missing types, syntax errors, nullable violations
      - **MSBuild errors** (MSB prefix): target failures, import issues, property evaluation
      - **NuGet errors** (NU prefix): restore failures, version conflicts, missing packages
      - **SDK errors** (NETSDK prefix): SDK not found, workload issues, TFM problems
-     - **Bin/obj clashes**: multiple projects or TFMs writing to the same output directory — use `search_binlog` for file access errors or MSB3277 warnings
+     - **Bin/obj clashes**: multiple projects or TFMs writing to the same output directory — look for IOException file access errors, MSB3277 warnings, or errors that appear intermittently across runs
      - **Generated file issues**: source generators failing or generated files not included in compilation (CS8785, AD0001)
 
 3. **Post findings**:
