@@ -1207,6 +1207,7 @@ jobs:
     permissions:
       contents: read
       issues: write
+      pull-requests: write
     timeout-minutes: 15
     env:
       GH_AW_ENGINE_ID: "copilot"
